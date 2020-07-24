@@ -6,15 +6,23 @@ from bs4 import BeautifulSoup
 page = requests.get("https://finance.tut.by/kurs/minsk/")
 soup = BeautifulSoup(page.content, 'html.parser')
 
-arr = soup.find_all('p')[4:-3]
+# the first 4 and last 3 tags contains info that's not connected to rates,
+# that's why slicing from 4 to -3
+rates_tutby_scrapped = soup.find_all('p')[4:-3]
 
-d = ['Dollar', 'Euro', '100 RUB', '100 UAH', '10 PLN', 'Funt', 'Frank', '100 en', '100 CZK', '10 SWD', '100 CHN', 'CND']
+# every 4 elements in rates_tutby_scrapped contain info about 1 currency
+# the 1st and 2nd elements are buy and sell rate, whereas 3rd and 4th are NBRB (НБРБ) rates,
+# that's why keep only 1st and 2nd for every 4 elements
+rates_tutby_clean = [rates_tutby_scrapped[i] for i in range(len(rates_tutby_scrapped)) if i % 4 == 0 or i % 4 == 1]
 
-for i, j in zip(range(0, len(arr), 4), d):
-    print(j + ':', arr[i].string, arr[i + 1].string)
+currency_names = ['Dollar', 'Euro', '100 RUB', '100 UAH', '10 PLN', 'Funt', 'Frank', '100 en', '100 CZK', '10 SWD',
+                  '100 CHN', 'CND']
+
+for i in range(len(currency_names)):
+    print('{} : {} {}'.format(currency_names[i], rates_tutby_clean[i * 2].string, rates_tutby_clean[i * 2 + 1].string))
 
 # scraping from myfin.by
-page = requests.get("https://myfin.by/currency/minsk", headers = {'User-agent': 'your bot 0.1'})
+page = requests.get("https://myfin.by/currency/minsk", headers={'User-agent': 'your bot 0.1'})
 soup = BeautifulSoup(page.content, 'html.parser')
 
 result = []
