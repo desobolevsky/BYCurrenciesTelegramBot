@@ -30,21 +30,25 @@ with open('config.yaml') as config_file:
     config = yaml.load(config_file, Loader=yaml.FullLoader)
     API_key = config['api_key']
 
-bot = telebot.TeleBot(API_key)
+bot = telebot.TeleBot(API_key, parse_mode='HTML')
 
 
 @bot.message_handler(commands=['start'])
 def start_message(message):
     bot.send_message(message.chat.id, "Started bot.")
 
+@bot.message_handler(commands=['help'])
+def help_message(message):
+    bot.send_message(message.chat.id, "Help")
+
 
 @bot.message_handler(commands=['general'])
 def general_currencies_message(message):
     general_rates = scrap.scrap_general_currencies()
 
-    message_reply = ''
+    message_reply = '<b>Валюта</b>:   Покупка - Продажа\n\n'
     for k, v in general_rates.items():
-        message_reply += ("{} : {} - {}\n".format(k, v[0], v[1]))
+        message_reply += ("<b>{}</b>: {} - {}\n".format(k, v[0], v[1]))
 
     bot.send_message(message.chat.id, message_reply)
     bot.send_message(message.chat.id, generate_update_message('general'))
@@ -73,9 +77,9 @@ def send_text(message):
             banks_rates = scrap.scrap_bank_currencies()
 
             rate_index = get_rate_keys(message.text)
-            message_reply = ''
+            message_reply = '<b>Банк</b>:   Покупает - Продает\n\n'
             for rate in banks_rates:
-                message_reply += ('{} : {} - {} \n'.format(rate['bank_name'], rate[rate_index[0]], rate[rate_index[1]]))
+                message_reply += ('<b>{}</b>: {} - {} \n'.format(rate['bank_name'], rate[rate_index[0]], rate[rate_index[1]]))
 
             bot.send_message(message.chat.id, message_reply, reply_markup=keyboard_remove)
             bot.send_message(message.chat.id, generate_update_message('banks'))
