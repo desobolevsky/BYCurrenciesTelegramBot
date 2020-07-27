@@ -39,7 +39,7 @@ def scrap_general_currencies():
     # that's why keep only 1st and 2nd for every 4 elements
     rates_tutby_clean = [rates_tutby_scrapped[i] for i in range(len(rates_tutby_scrapped)) if i % 4 == 0 or i % 4 == 1]
 
-    currency_names = ['Dollar', 'Euro', '100 RUB', '100 UAH', '10 PLN', 'Funt', 'Frank', '100 en', '100 CZK', '10 SWD',
+    currency_names = ['USD', 'EUR', '100 RUB', '100 UAH', '10 PLN', 'GBP', 'CHF', '100 JPY', '100 CZK', '10 SWD',
                       '100 CHN', 'CND']
 
     rates = {}
