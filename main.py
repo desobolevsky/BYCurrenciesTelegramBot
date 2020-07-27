@@ -35,12 +35,24 @@ bot = telebot.TeleBot(API_key, parse_mode='HTML')
 
 @bot.message_handler(commands=['start'])
 def start_message(message):
-    bot.send_message(message.chat.id, "Started bot.")
+    bot.send_message(message.chat.id, "Привет!😃\n"
+                                      "Я бот, который показывает курсы валют в Беларуси.\n"
+                                      "Используй команды: \n"
+                                      "/general - для общего курса валют на сегодняшний день\n"
+                                      "/banks - для курса валют по всем банкам\n"
+                                      "/help - если вдруг нужна помощь\n")
 
 
 @bot.message_handler(commands=['help'])
 def help_message(message):
-    bot.send_message(message.chat.id, "Help")
+    bot.send_message(message.chat.id, "Команды:\n"
+                                      "/general - для общего курса валют на сегодняшний день\n"
+                                      "/banks - для курса валют по всем банкам\n"
+                                      "/help - если вдруг нужна помощь\n\n"
+                                      "Данный бот написан с помощью библиотеки BeautifulSoup, курсы валют парсятся с сайтов "
+                                      "<a href=\"https://finance.tut.by/kurs/minsk/\">finance.tut.by</a>(в команде /general) "
+                                      "и <a href=\"https://myfin.by/currency/minsk\">myfin.by</a>(в команде /banks).\n\n"
+                                      "По всем вопросам можно писать создателю бота - @denissobolevsky")
 
 
 @bot.message_handler(commands=['general'])
